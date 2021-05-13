@@ -1,4 +1,4 @@
-package com.zelenux.upprpo_server_test.observed.data_transfer_objects;
+package com.zelenux.upprpo_server_test.dataTransferObjects;
 
 import lombok.Getter;
 

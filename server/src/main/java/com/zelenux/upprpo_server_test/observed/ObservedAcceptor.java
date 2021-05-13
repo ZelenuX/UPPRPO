@@ -1,16 +1,20 @@
 package com.zelenux.upprpo_server_test.observed;
 
-import com.zelenux.upprpo_server_test.observed.data_transfer_objects.Data;
-import com.zelenux.upprpo_server_test.observed.data_transfer_objects.Device;
+import com.zelenux.upprpo_server_test.dataTransferObjects.Data;
+import com.zelenux.upprpo_server_test.dataTransferObjects.Device;
+import com.zelenux.upprpo_server_test.observed.exceptions.DeviceAlreadyExistsException;
+import com.zelenux.upprpo_server_test.observed.exceptions.DeviceDoesNotExistException;
+import com.zelenux.upprpo_server_test.observed.exceptions.WrongFormatException;
+import com.zelenux.upprpo_server_test.observed.exceptions.WrongPasswordException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
 
-@Controller
+@RestController
 public class ObservedAcceptor {
     private static Integer parseInt(String str){
         if (str == null){
@@ -20,15 +24,35 @@ public class ObservedAcceptor {
             return Integer.parseInt(str);
         }
     }
-    private static Integer calcAvgParam(List<Map<String, Object>> structList, String parameterName){
+    private static Integer calcAvgParam(List<Map<String, Object>> structList,
+                                        String parameterName, boolean isParameterList){
         Integer avgParam = 0;
         int paramN = 0;
         if (structList != null){
             for (Map<String, Object> struct : structList){
-                Integer curParam = (Integer)struct.get(parameterName);
-                if (curParam != null){
-                    ++paramN;
-                    avgParam += curParam;
+                if (isParameterList){
+                    List<Integer> curParamList = (List<Integer>) struct.get(parameterName);
+                    if (curParamList != null && !curParamList.isEmpty()){
+                        int avgParamInList = 0;
+                        int paramInListN = 0;
+                        for (Integer curParamInList : curParamList){
+                            if (curParamInList != null){
+                                avgParamInList += curParamInList;
+                                ++paramInListN;
+                            }
+                        }
+                        if (paramInListN != 0){
+                            ++paramN;
+                            avgParam += avgParamInList / paramInListN;
+                        }
+                    }
+                }
+                else {
+                    Integer curParam = (Integer) struct.get(parameterName);
+                    if (curParam != null) {
+                        ++paramN;
+                        avgParam += curParam;
+                    }
                 }
             }
         }
@@ -46,19 +70,23 @@ public class ObservedAcceptor {
     public ObservedAcceptor(@Autowired ObservedController observedController) {
         this.observedController = observedController;
     }
+
     @PostMapping("/register_observed")
-    public String registerDevice(@RequestBody Map<String, String> model){
+    public String registerDevice(@RequestBody Map<String, String> model)
+            throws DeviceAlreadyExistsException, WrongFormatException {
         return observedController.registerDevice(new Device(model.get("device"), model.get("password")));
     }
+
     @PostMapping("/add_data")
-    public String addData(@RequestBody Map<String, Object> model){
+    public String addData(@RequestBody Map<String, Object> model)
+            throws DeviceDoesNotExistException, WrongPasswordException, WrongFormatException {
         try {
             List<Map<String, Object>> cpus = (List<Map<String, Object>>)model.get("cpus");
             List<Map<String, Object>> rams = (List<Map<String, Object>>)model.get("rams");
             return observedController.addData(new Data((String)model.get("device"), (String)model.get("password"),
-                    calcAvgParam(cpus, "temp"),
-                    calcAvgParam(cpus, "load"),
-                    calcAvgParam(rams, "load")));
+                    calcAvgParam(cpus, "t", true),
+                    calcAvgParam(cpus, "load", true),
+                    calcAvgParam(rams, "load", true)));
         }
         catch (NumberFormatException | ClassCastException e){
             return observedController.formatError();

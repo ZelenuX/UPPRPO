@@ -1,4 +1,4 @@
-package com.zelenux.upprpo_server_test.observed.entities;
+package com.zelenux.upprpo_server_test.entities;
 
 import lombok.Data;
 
@@ -8,7 +8,7 @@ import java.io.Serializable;
 @Data
 @Entity
 @Table(name = "OBSERVED_DEVICES")
-public class ObservedDevice implements Serializable {
+public class DeviceEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -23,8 +23,8 @@ public class ObservedDevice implements Serializable {
     @Column(name = "PASSWORD", nullable = false)
     private String password;
 
-    public ObservedDevice() {}
-    public ObservedDevice(String name, String password) {
+    public DeviceEntity() {}
+    public DeviceEntity(String name, String password) {
         this.name = name;
         this.password = password;
     }

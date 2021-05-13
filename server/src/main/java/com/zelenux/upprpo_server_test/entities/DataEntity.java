@@ -1,4 +1,4 @@
-package com.zelenux.upprpo_server_test.observed.entities;
+package com.zelenux.upprpo_server_test.entities;
 
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "OBSERVED_DATA")
-public class ObservedData implements Serializable {
+public class DataEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -20,7 +20,7 @@ public class ObservedData implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "OBSERVED_ID", nullable = false)
-    private ObservedDevice observedDevice;
+    private DeviceEntity device;
 
     @Column(name = "TIME")
     private Date time;
@@ -34,9 +34,9 @@ public class ObservedData implements Serializable {
     @Column(name = "RAM_LOAD")
     private Integer ramLoad;
 
-    public ObservedData() {}
-    public ObservedData(ObservedDevice observedDevice, Integer processorTemperature, Integer processorLoad, Integer ramLoad) {
-        this.observedDevice = observedDevice;
+    public DataEntity() {}
+    public DataEntity(DeviceEntity device, Integer processorTemperature, Integer processorLoad, Integer ramLoad) {
+        this.device = device;
         this.processorTemperature = processorTemperature;
         this.processorLoad = processorLoad;
         this.ramLoad = ramLoad;

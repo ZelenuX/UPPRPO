@@ -1,13 +1,13 @@
-package com.zelenux.upprpo_server_test.observed.data_transfer_objects;
+package com.zelenux.upprpo_server_test.dataTransferObjects;
 
 import lombok.Getter;
 
 @Getter
-public class Device {
+public class User {
     private String name;
     private String password;
 
-    public Device(String name, String password){
+    public User(String name, String password){
         this.name = name;
         this.password = password;
     }
