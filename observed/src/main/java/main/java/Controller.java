@@ -11,8 +11,8 @@ public class Controller {
     String username;
     String password;
     ServerConnector connector;
-    String uri="127.0.0.1:8080/add_data";
-    String registerUri="127.0.0.1:8080/register_observed";
+    String uri="http://127.0.0.1:8080/add_data";
+    String registerUri="http://127.0.0.1:8080/register_observed";
     Scanner read;
     public static void main(String[] args){
         new Controller(args);

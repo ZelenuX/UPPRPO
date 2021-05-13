@@ -1,16 +1,16 @@
 package main.java;
 
+import com.profesorfalken.jsensors.model.components.Components;
+import com.profesorfalken.jsensors.model.components.Cpu;
+import com.profesorfalken.jsensors.model.components.Disk;
+import com.profesorfalken.jsensors.model.components.Gpu;
+import com.profesorfalken.jsensors.model.components.Mobo;
 import com.profesorfalken.jsensors.JSensors;
-import com.profesorfalken.jsensors.model.components.*;
-import com.profesorfalken.jsensors.model.sensors.Fan;
-import com.profesorfalken.jsensors.model.sensors.Load;
-import com.profesorfalken.jsensors.model.sensors.Sensors;
 import com.profesorfalken.jsensors.model.sensors.Temperature;
-
-import java.io.File;
-import java.lang.management.*;
+import com.profesorfalken.jsensors.model.sensors.Sensors;
+import com.profesorfalken.jsensors.model.sensors.Load;
+import com.profesorfalken.jsensors.model.sensors.Fan;
 import java.util.List;
-import java.util.Vector;
 
 public class StateScanner {
     Components components;

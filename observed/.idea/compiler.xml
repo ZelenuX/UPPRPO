@@ -6,10 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="jSensors" />
         <module name="observed" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="jSensors" target="1.5" />
       <module name="observed" target="3.8" />
     </bytecodeTargetLevel>
   </component>
