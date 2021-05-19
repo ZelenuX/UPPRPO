@@ -1,4 +1,5 @@
 import MachineList from "./MachineList";
+import Test from "./Test";
 
 let machines = [
   {
@@ -26,7 +27,7 @@ let machines = [
 
 function App() {
   return (
-    <MachineList machines={machines}/>
+    <Test />
   );
 }
 

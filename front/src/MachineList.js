@@ -1,5 +1,6 @@
 import React from "react";
-import Machine from "./Machine";
+import MachineBrief from "./MachineBrief";
+import MachineAdd from "./MachineAdd";
 
 class MachineList extends React.Component {
     constructor(props) {
@@ -22,7 +23,8 @@ class MachineList extends React.Component {
         return(
             <div className="machine-list">
                 {this.state.machines.map((machine) =>
-                    <Machine id={machine.id} onDelete={this.onDelete} machine={machine} />)}
+                    <MachineBrief key={machine.id} onDelete={this.onDelete} machine={machine} />)}
+                    <MachineAdd onMachineAdded={this.onDelete} />
             </div>
         );
     }

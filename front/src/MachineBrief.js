@@ -2,7 +2,7 @@ import React from 'react';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import Button from 'react-bootstrap/Button';
 
-class Machine extends React.Component {
+class MachineBrief extends React.Component {
     render() {
         let machine = this.props.machine;
         let onDelete = this.props.onDelete;
@@ -19,4 +19,4 @@ class Machine extends React.Component {
     }
 }
 
-export default Machine;
+export default MachineBrief;
