@@ -3,6 +3,11 @@
     <output-path>$PROJECT_DIR$/out/artifacts/observed_jar</output-path>
     <root id="archive" name="observed.jar">
       <element id="module-output" name="observed" />
+      <element id="module-output" name="jSensors" />
+      <element id="library" level="project" name="Maven: net.java.dev.jna:jna:4.5.0" />
+      <element id="library" level="project" name="Maven: org.slf4j:slf4j-simple:1.7.25" />
+      <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.25" />
+      <element id="library" level="project" name="Maven: com.profesorfalken:jPowerShell:1.9.1" />
     </root>
   </artifact>
 </component>

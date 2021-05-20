@@ -10,9 +10,9 @@
         <module name="observed" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="jSensors" target="1.5" />
-      <module name="observed" target="3.8" />
+    <bytecodeTargetLevel target="11">
+      <module name="jSensors" target="1.8" />
+      <module name="observed" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>
