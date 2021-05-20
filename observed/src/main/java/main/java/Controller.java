@@ -31,16 +31,12 @@ public class Controller {
         }
         Timer step = new Timer();
         step.schedule(new Tick(),0,1000);
-        //todo timer
+
 
         System.out.println(scanner.getCPUsData());
         System.out.println(scanner.getDisksData());
         System.out.println(scanner.getGPUsData());
         System.out.println(scanner.getMobosData());
-
-
-
-        System.exit(0);
     }
     public void register(){
         boolean unregistered = true;
@@ -49,13 +45,16 @@ public class Controller {
             username = read.nextLine();
             System.out.println("Enter password");
             password = read.nextLine();
-            String registerRequest = "{ \"username\" : \"" + username + "\", \"password\" : \"" + password + "\"";
+            String registerRequest = "{ \"username\" : \"" + username + "\", \"password\" : \"" + password + "\"}";
             HttpResponse response = connector.register(registerRequest, registerUri);
             MyEntry<ResponseType, Object> handler = ResponseHandler.processResponse(response);
             if(handler.getKey() == ResponseType.OK){
                 unregistered =false;
             }else if(handler.getKey() == ResponseType.BAD_CREDITS){
                 System.out.println("Username already taken. try again");
+            }else{
+                System.out.println(handler.getValue());
+                System.exit(1);
             }
         }
     }
