@@ -27,17 +27,17 @@ public class StateScanner {
     }
     public String getCPUsData(){
         StringBuilder cpuDataBuilder = new StringBuilder();
-        cpuDataBuilder.append( " cpus : [");
+        cpuDataBuilder.append( " \"cpus\" : [");
         cpus.forEach(cpu->{
             cpuDataBuilder.append("{");
-            cpuDataBuilder.append("\" cpu_name\" : \""+ cpu.name +"\"" );
+            cpuDataBuilder.append("\"cpu_name\" : \""+ cpu.name +"\"" );
             Sensors cpuSensors = cpu.sensors;
             if(cpuSensors!=null){
                 List<Temperature> temps = cpuSensors.temperatures;
                 if(temps!=null && temps.size()!=0){
                     cpuDataBuilder.append(", \"cpu_t\" : [");
                     temps.forEach(temperature -> {
-                        cpuDataBuilder.append("\"" + String.valueOf(temperature.value)+"\",");
+                        cpuDataBuilder.append("" + String.valueOf(temperature.value)+",");
                     });
                     if(temps.size()!=0){
                         cpuDataBuilder.deleteCharAt(cpuDataBuilder.length()-1);
@@ -48,7 +48,7 @@ public class StateScanner {
                 if(loads!=null && loads.size()!=0){
                     cpuDataBuilder.append(", \"cpu_load\" : [");
                     loads.forEach(load -> {
-                        cpuDataBuilder.append("\"" + String.valueOf(load.value)+"\",");
+                        cpuDataBuilder.append("" + String.valueOf(load.value)+",");
                     });
                     if(loads.size()!=0){
                         cpuDataBuilder.deleteCharAt(cpuDataBuilder.length()-1);
@@ -77,7 +77,7 @@ public class StateScanner {
     }
     public String getDisksData(){
         StringBuilder diskDataBuilder = new StringBuilder();
-        diskDataBuilder.append(" disks : [");
+        diskDataBuilder.append(" \"disks\" : [");
         disks.forEach(disk->{
               diskDataBuilder.append("{");
               diskDataBuilder.append("\"disk_name\" : \"" + disk.name +"\"");
@@ -87,7 +87,7 @@ public class StateScanner {
                   if(temps!=null && temps.size()!=0){
                       diskDataBuilder.append(", \"disk_t\" : [");
                       temps.forEach(temperature -> {
-                          diskDataBuilder.append("\"" + String.valueOf(temperature.value)+"\",");
+                          diskDataBuilder.append("" + String.valueOf(temperature.value)+",");
                       });
                       if(temps.size()!=0){
                           diskDataBuilder.deleteCharAt(diskDataBuilder.length()-1);
@@ -98,7 +98,7 @@ public class StateScanner {
                   if(loads!=null && loads.size()!=0){
                       diskDataBuilder.append(", \"disk_load\" : [");
                       loads.forEach(load -> {
-                          diskDataBuilder.append("\"" + String.valueOf(load.value)+"\",");
+                          diskDataBuilder.append("" + String.valueOf(load.value)+",");
                       });
                       if(loads.size()!=0){
                           diskDataBuilder.deleteCharAt(diskDataBuilder.length()-1);
@@ -127,17 +127,17 @@ public class StateScanner {
     }
     public String getGPUsData(){
         StringBuilder gpuDataBuilder = new StringBuilder();
-        gpuDataBuilder.append( " gpus : [");
+        gpuDataBuilder.append( " \"gpus\" : [");
         gpus.forEach(gpu->{
             gpuDataBuilder.append("{");
-            gpuDataBuilder.append("\" gpu_name\" : \""+ gpu.name +"\"" );
+            gpuDataBuilder.append("\"gpu_name\" : \""+ gpu.name +"\"" );
             Sensors gpuSensors = gpu.sensors;
             if(gpuSensors!=null){
                 List<Temperature> temps = gpuSensors.temperatures;
                 if(temps!=null && temps.size()!=0){
                     gpuDataBuilder.append(", \"gpu_t\" : [");
                     temps.forEach(temperature -> {
-                        gpuDataBuilder.append("\"" + String.valueOf(temperature.value)+"\",");
+                        gpuDataBuilder.append("" + String.valueOf(temperature.value)+",");
                     });
                     if(temps.size()!=0){
                         gpuDataBuilder.deleteCharAt(gpuDataBuilder.length()-1);
@@ -148,7 +148,7 @@ public class StateScanner {
                 if(loads!=null && loads.size()!=0){
                     gpuDataBuilder.append(", \"gpu_load\" : [");
                     loads.forEach(load -> {
-                        gpuDataBuilder.append("\"" + String.valueOf(load.value)+"\",");
+                        gpuDataBuilder.append("" + String.valueOf(load.value)+",");
                     });
                     if(loads.size()!=0){
                         gpuDataBuilder.deleteCharAt(gpuDataBuilder.length()-1);
@@ -177,17 +177,17 @@ public class StateScanner {
     }
     public String getMobosData(){
         StringBuilder moboDataBuilder = new StringBuilder();
-        moboDataBuilder.append( " mobos : [");
+        moboDataBuilder.append( " \"mobos\" : [");
         mobos.forEach(mobo->{
             moboDataBuilder.append("{");
-            moboDataBuilder.append("\" mobo_name\" : \""+ mobo.name +"\"" );
+            moboDataBuilder.append("\"mobo_name\" : \""+ mobo.name +"\"" );
             Sensors moboSensors = mobo.sensors;
             if(moboSensors!=null){
                 List<Temperature> temps = moboSensors.temperatures;
                 if(temps!=null && temps.size()!=0){
                     moboDataBuilder.append(", \"mobo_t\" : [");
                     temps.forEach(temperature -> {
-                        moboDataBuilder.append("\"" + String.valueOf(temperature.value)+"\",");
+                        moboDataBuilder.append("" + String.valueOf(temperature.value)+",");
                     });
                     if(temps.size()!=0){
                         moboDataBuilder.deleteCharAt(moboDataBuilder.length()-1);
@@ -198,7 +198,7 @@ public class StateScanner {
                 if(loads!=null && loads.size()!=0){
                     moboDataBuilder.append(", \"mobo_load\" : [");
                     loads.forEach(load -> {
-                        moboDataBuilder.append("\"" + String.valueOf(load.value)+"\",");
+                        moboDataBuilder.append("" + String.valueOf(load.value)+",");
                     });
                     if(loads.size()!=0){
                         moboDataBuilder.deleteCharAt(moboDataBuilder.length()-1);

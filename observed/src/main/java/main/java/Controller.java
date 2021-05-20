@@ -65,7 +65,7 @@ public class Controller {
 
             StringBuilder messageBuilder = new StringBuilder();
             messageBuilder.append("{ \"username\" : \""+username+"\",");
-            messageBuilder.append("{ \"password\" : \""+password+"\",");
+            messageBuilder.append(" \"password\" : \""+password+"\",");
             messageBuilder.append(cpusData);
             messageBuilder.append(",");
             messageBuilder.append(gpusData);
