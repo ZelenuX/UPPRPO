@@ -32,11 +32,6 @@ public class Controller {
         Timer step = new Timer();
         step.schedule(new Tick(),0,1000);
 
-
-        System.out.println(scanner.getCPUsData());
-        System.out.println(scanner.getDisksData());
-        System.out.println(scanner.getGPUsData());
-        System.out.println(scanner.getMobosData());
     }
     public void register(){
         boolean unregistered = true;
