@@ -10,4 +10,7 @@ import java.util.List;
 public interface DataRepository extends JpaRepository<DataEntity, Long>, JpaSpecificationExecutor<DataEntity> {
     @Query("select d from DataEntity d where d.device.id = ?1")
     List<DataEntity> findAllByDeviceId(Long deviceId);
+
+    @Query("select d from DataEntity d where d.device.id = ?1 order by d.time desc nulls last")
+    List<DataEntity> findLastByDeviceId(Long deviceId);
 }

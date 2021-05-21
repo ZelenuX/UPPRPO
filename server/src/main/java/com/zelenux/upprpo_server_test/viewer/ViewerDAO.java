@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ViewerDAO {
@@ -76,6 +77,10 @@ public class ViewerDAO {
         this.devicesGroupsRepository = devicesGroupsRepository;
     }
 
+    public void checkUsernameAndPassword(User user) throws UserException {
+        getUserIfPasswordCorrect(user);
+    }
+
     @Transactional
     public void addUser(User user) throws UserAlreadyExistsException {
         UserEntity userEntity = usersRepository.findByName(user.getName());
@@ -86,16 +91,25 @@ public class ViewerDAO {
     }
 
     @Transactional
-    public void addGroup(Group group) throws GroupAlreadyExistsException {
+    public Group addGroup(Group group) throws GroupAlreadyExistsException {
         GroupEntity groupEntity = groupsRepository.findByName(group.getName());
         if (groupEntity != null){
             throw new GroupAlreadyExistsException();
         }
-        groupsRepository.save(new GroupEntity(group.getName(), group.getEntrancePassword()));
+        GroupEntity newGroupEntity = groupsRepository.save(new GroupEntity(group.getName(), group.getEntrancePassword()));
+        return new Group(newGroupEntity);
+    }
+
+    public Group getGroupById(Long id) throws GroupDoesNotExistException {
+        Optional<GroupEntity> groupOptional = groupsRepository.findById(id);
+        if (groupOptional.isEmpty()){
+            throw new GroupDoesNotExistException();
+        }
+        return new Group(groupOptional.get());
     }
 
     @Transactional
-    public void addUserToGroup(User user, Group group) throws UserException, GroupException {
+    public Group addUserToGroup(User user, Group group) throws UserException, GroupException {
         UserEntity userEntity = getUserIfPasswordCorrect(user);
         GroupEntity groupEntity = getGroupIfPasswordCorrect(group);
         UserGroupEntity userGroupEntity = usersGroupsRepository
@@ -104,6 +118,32 @@ public class ViewerDAO {
             throw new GroupAlreadyHasUserException();
         }
         usersGroupsRepository.save(new UserGroupEntity(userEntity, groupEntity));
+        return new Group(groupEntity);
+    }
+
+    @Transactional
+    public void removeUserFromGroup(User user, Group group) throws UserException, GroupException {
+        UserEntity userEntity = getUserIfPasswordCorrect(user);
+        Optional<GroupEntity> groupEntityOptional = groupsRepository.findById(group.getId());
+        if (groupEntityOptional.isEmpty()){
+            throw new GroupDoesNotExistException();
+        }
+        GroupEntity groupEntity = groupEntityOptional.get();
+        UserGroupEntity userGroupEntity = usersGroupsRepository
+                .findByUserAndGroup(userEntity.getId(), groupEntity.getId());
+        if (userGroupEntity == null){
+            throw new GroupDoesNotContainUserException();
+        }
+        usersGroupsRepository.delete(userGroupEntity);
+    }
+
+    @Transactional
+    public List<Group> getGroupsWithUser(User user) throws UserException {
+        UserEntity userEntity = getUserIfPasswordCorrect(user);
+        List<GroupEntity> groups = usersGroupsRepository.findByUser(userEntity.getId());
+        List<Group> res = new ArrayList<>();
+        groups.forEach(groupEntity -> res.add(new Group(groupEntity.getId(), groupEntity.getName(), groupEntity.getEntrancePassword())));
+        return res;
     }
 
     @Transactional
@@ -119,29 +159,48 @@ public class ViewerDAO {
     }
 
     @Transactional
-    public List<Device> getDevicesOfGroup(Group group) throws GroupException {
-        GroupEntity groupEntity = getGroupIfPasswordCorrect(group);
+    public List<Device> getGroupDevices(Group group) throws GroupException {
+        Optional<GroupEntity> groupEntityOptional = groupsRepository.findById(group.getId());
+        if (groupEntityOptional.isEmpty()){
+            throw new GroupDoesNotExistException();
+        }
+        GroupEntity groupEntity = groupEntityOptional.get();
         List<DeviceGroupEntity> deviceGroupEntities = devicesGroupsRepository.findAllByGroupId(groupEntity.getId());
         List<Device> devices = new ArrayList<>();
         for (DeviceGroupEntity deviceGroupEntity : deviceGroupEntities){
             DeviceEntity deviceEntity = deviceGroupEntity.getDevice();
-            devices.add(new Device(deviceEntity.getName(), deviceEntity.getPassword()));
+            devices.add(new Device(deviceEntity.getId(), deviceEntity.getName(), deviceEntity.getPassword()));
         }
         return devices;
     }
 
     @Transactional
-    public List<Data> getAllData(Device device) throws DeviceException, NoDataException {
-        DeviceEntity deviceEntity = getDeviceIfPasswordCorrect(device);
+    public List<Data> getAllDeviceData(Device device) throws DeviceException {
+        Optional<DeviceEntity> deviceEntityOptional = devicesRepository.findById(device.getId());
+        if (deviceEntityOptional.isEmpty()){
+            throw new DeviceDoesNotExistException();
+        }
+        DeviceEntity deviceEntity = deviceEntityOptional.get();
         List<DataEntity> dataEntities = dataRepository.findAllByDeviceId(deviceEntity.getId());
         List<Data> dataList = new ArrayList<>();
-        if (dataEntities == null){
-            throw new NoDataException();
-        }
         for (DataEntity dataEntity : dataEntities){
-            dataList.add(new Data(device.getName(), device.getPassword(),
+            dataList.add(new Data(dataEntity.getId(), device.getName(), device.getPassword(),
                     dataEntity.getProcessorTemperature(), dataEntity.getProcessorLoad(), dataEntity.getRamLoad()));
         }
         return dataList;
+    }
+
+    @Transactional
+    public Data getLastDeviceData(Device device) throws DeviceException {
+        Optional<DeviceEntity> deviceEntityOptional = devicesRepository.findById(device.getId());
+        if (deviceEntityOptional.isEmpty()){
+            throw new DeviceDoesNotExistException();
+        }
+        DeviceEntity deviceEntity = deviceEntityOptional.get();
+        List<DataEntity> sortedDataEntities = dataRepository.findLastByDeviceId(deviceEntity.getId());
+        if (sortedDataEntities.size() == 0){
+            return null;
+        }
+        return new Data(sortedDataEntities.get(0));
     }
 }

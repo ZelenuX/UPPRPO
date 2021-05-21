@@ -74,7 +74,7 @@ public class ObservedAcceptor {
     @PostMapping("/register_observed")
     public String registerDevice(@RequestBody Map<String, String> model)
             throws DeviceAlreadyExistsException, WrongFormatException {
-        return observedController.registerDevice(new Device(model.get("device"), model.get("password")));
+        return observedController.registerDevice(new Device(model.get("username"), model.get("password")));
     }
 
     @PostMapping("/add_data")
@@ -83,10 +83,12 @@ public class ObservedAcceptor {
         try {
             List<Map<String, Object>> cpus = (List<Map<String, Object>>)model.get("cpus");
             List<Map<String, Object>> rams = (List<Map<String, Object>>)model.get("rams");
-            return observedController.addData(new Data((String)model.get("device"), (String)model.get("password"),
-                    calcAvgParam(cpus, "t", true),
-                    calcAvgParam(cpus, "load", true),
-                    calcAvgParam(rams, "load", true)));
+            String response = observedController.addData(new Data((String)model.get("username"), (String)model.get("password"),
+                    calcAvgParam(cpus, "cpu_t", true),
+                    calcAvgParam(cpus, "cpu_load", true),
+                    calcAvgParam(rams, "ram_load", true)));
+            System.out.println("data added");
+            return response;
         }
         catch (NumberFormatException | ClassCastException e){
             return observedController.formatError();

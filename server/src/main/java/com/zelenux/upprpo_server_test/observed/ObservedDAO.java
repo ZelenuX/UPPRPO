@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 @Service
 public class ObservedDAO {
     private DevicesRepository devicesRepository;
@@ -40,7 +42,9 @@ public class ObservedDAO {
         if (!deviceInDatabase.getPassword().equals(data.getDevicePassword())){
             throw new WrongPasswordException();
         }
-        dataRepository.save(new DataEntity(deviceInDatabase,
-                data.getProcessorTemperature(), data.getProcessorLoad(), data.getRamLoad()));
+        DataEntity dataEntity = new DataEntity(deviceInDatabase,
+                data.getProcessorTemperature(), data.getProcessorLoad(), data.getRamLoad());
+        dataEntity.setTime(new Date());
+        dataRepository.save(dataEntity);
     }
 }
