@@ -2,11 +2,11 @@ package com.zelenux.upprpo_server_test.dataTransferObjects;
 
 import com.zelenux.upprpo_server_test.utils.JSONAdder;
 
-public class DeviceLastData implements JSONAdder {
+public class DeviceSingleData implements JSONAdder {
     private Device device;
     private Data data;
 
-    public DeviceLastData(Device device, Data data) {
+    public DeviceSingleData(Device device, Data data) {
         this.device = device;
         this.data = data;
     }

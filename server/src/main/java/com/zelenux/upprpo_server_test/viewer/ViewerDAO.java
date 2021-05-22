@@ -1,9 +1,6 @@
 package com.zelenux.upprpo_server_test.viewer;
 
-import com.zelenux.upprpo_server_test.dataTransferObjects.Data;
-import com.zelenux.upprpo_server_test.dataTransferObjects.Device;
-import com.zelenux.upprpo_server_test.dataTransferObjects.Group;
-import com.zelenux.upprpo_server_test.dataTransferObjects.User;
+import com.zelenux.upprpo_server_test.dataTransferObjects.*;
 import com.zelenux.upprpo_server_test.entities.*;
 import com.zelenux.upprpo_server_test.repositories.*;
 import com.zelenux.upprpo_server_test.viewer.exceptions.NoDataException;
@@ -22,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 @Service
 public class ViewerDAO {
@@ -202,5 +200,40 @@ public class ViewerDAO {
             return null;
         }
         return new Data(sortedDataEntities.get(0));
+    }
+
+    @Transactional
+    public DeviceSingleData addDeviceToGroup(Device device, Group group, User user) throws DeviceException, GroupException, UserException {
+        DeviceEntity deviceEntity = getDeviceIfPasswordCorrect(device);
+        UserEntity userEntity = getUserIfPasswordCorrect(user);
+        Optional<GroupEntity> groupEntityOptional = groupsRepository.findById(group.getId());
+        if (groupEntityOptional.isEmpty()){
+            throw new GroupDoesNotExistException();
+        }
+        GroupEntity groupEntity = groupEntityOptional.get();
+        if (usersGroupsRepository.findByUserAndGroup(userEntity.getId(), groupEntity.getId()) == null){
+            throw new GroupDoesNotContainUserException();
+        }
+        if (devicesGroupsRepository.findByDeviceAndGroup(deviceEntity.getId(), groupEntity.getId()) != null){
+            throw new GroupAlreadyHasDeviceException();
+        }
+        devicesGroupsRepository.save(new DeviceGroupEntity(deviceEntity, groupEntity));
+        Device deviceWithId = new Device(deviceEntity);
+        return new DeviceSingleData(deviceWithId, getLastDeviceData(deviceWithId));
+    }
+
+    @Transactional
+    public void removeDeviceFromGroup(Device device, Group group, User user) throws DeviceException, GroupException, UserException {
+        DeviceEntity deviceEntity = devicesRepository.findById(device.getId()).orElseThrow(DeviceDoesNotExistException::new);
+        UserEntity userEntity = getUserIfPasswordCorrect(user);
+        GroupEntity groupEntity = groupsRepository.findById(group.getId()).orElseThrow(GroupDoesNotExistException::new);
+        if (usersGroupsRepository.findByUserAndGroup(userEntity.getId(), groupEntity.getId()) == null){
+            throw new GroupDoesNotContainUserException();
+        }
+        DeviceGroupEntity deviceGroupEntity = devicesGroupsRepository.findByDeviceAndGroup(deviceEntity.getId(), groupEntity.getId());
+        if (deviceGroupEntity == null){
+            throw new GroupDoesNotContainDeviceException();
+        }
+        devicesGroupsRepository.delete(deviceGroupEntity);
     }
 }

@@ -4,6 +4,7 @@ import com.zelenux.upprpo_server_test.dataTransferObjects.Device;
 import com.zelenux.upprpo_server_test.dataTransferObjects.Group;
 import com.zelenux.upprpo_server_test.dataTransferObjects.User;
 import com.zelenux.upprpo_server_test.viewer.exceptions.WrongFormatException;
+import com.zelenux.upprpo_server_test.viewer.exceptions.deviceExceptions.DeviceException;
 import com.zelenux.upprpo_server_test.viewer.exceptions.groupExceptions.GroupAlreadyExistsException;
 import com.zelenux.upprpo_server_test.viewer.exceptions.groupExceptions.GroupException;
 import com.zelenux.upprpo_server_test.viewer.exceptions.userExceptions.UserException;
@@ -84,7 +85,7 @@ public class ViewerAcceptorGroups {
     }
 
     @PostMapping("/id/{id}")//todo post -> get
-    public String getGroupInfo(@PathVariable(value="id") Long id, @RequestBody Map<String, Object> model)
+    public String getLastGroupInfo(@PathVariable(value="id") Long id, @RequestBody Map<String, Object> model)
             throws WrongFormatException, GroupException, UserException {
         try {
             Map<String, String> credentials = (Map<String, String>) model.get("credentials");
@@ -100,19 +101,43 @@ public class ViewerAcceptorGroups {
         }
     }
 
-    /*@PostMapping("/id/{id}/add")//todo post -> get
-    public String addDeviceToGroup(@PathVariable(value="id") Long id, @RequestBody Map<String, Object> model)
-            throws WrongFormatException {
+    @PostMapping("/id/{id}/add")//todo post -> get
+    public String addDeviceToGroup(@PathVariable(value="id") Long groupId, @RequestBody Map<String, Object> model)
+            throws WrongFormatException, GroupException, DeviceException, UserException {
         try {
             Map<String, String> credentials = (Map<String, String>) model.get("credentials");
             if (credentials == null) {
                 return controller.formatError();
             }
             User user = new User(credentials.get("username"), credentials.get("password"));
+            Group group = new Group(groupId);
             Device device = new Device((String) model.get("observed_name"), (String) model.get("observed_password"));
+            return controller.addDeviceToGroup(device, group, user);
         }
         catch (ClassCastException e){
             return controller.formatError();
         }
-    }*/
+    }
+
+    @PostMapping("/id/{id}/remove")//todo post -> get
+    public String removeDeviceFromGroup(@PathVariable(value="id") Long groupId, @RequestBody Map<String, Object> model)
+            throws WrongFormatException, GroupException, DeviceException, UserException {
+        try {
+            Map<String, String> credentials = (Map<String, String>) model.get("credentials");
+            if (credentials == null) {
+                return controller.formatError();
+            }
+            User user = new User(credentials.get("username"), credentials.get("password"));
+            Group group = new Group(groupId);
+            Integer deviceId = (Integer) model.get("observed_id");
+            if (deviceId == null){
+                return controller.formatError();
+            }
+            Device device = new Device((long)deviceId);
+            return controller.removeDeviceFromGroup(device, group, user);
+        }
+        catch (ClassCastException e){
+            return controller.formatError();
+        }
+    }
 }
