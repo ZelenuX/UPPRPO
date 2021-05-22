@@ -1,4 +1,5 @@
 import React from "react";
+import Helper from "./Helper";
 
 class GroupCreate extends React.Component {
     constructor(props) {
@@ -47,20 +48,17 @@ class GroupCreate extends React.Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if(this.state.postSent && !prevState.postSent) {
-            fetch('http://127.0.0.1:8080/api/group/', {
+           Helper.fetchHelper('http://127.0.0.1:8080/group/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8'
                 },
                 body: JSON.stringify({
+                    credentials: this.props.credentials,
                     name: prevState.groupName,
                     password: prevState.groupPassword
                 })
             })
-                .then(response => response.ok ?
-                    response.json() :
-                    new Promise((resolve, reject) => reject(response.error()))
-                )
                 .then(json => {
                         this.props.onGroupCreated(json);
                         this.setState({

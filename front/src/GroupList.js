@@ -2,6 +2,7 @@ import React from "react";
 import GroupEntry from "./GroupEntry";
 import GroupJoin from "./GroupJoin";
 import GroupCreate from "./GroupCreate";
+import Helper from "./Helper";
 
 class GroupList extends React.Component {
     constructor(props) {
@@ -14,11 +15,14 @@ class GroupList extends React.Component {
     }
 
     componentDidMount() {
-        fetch('http://127.0.0.1:8080/api/group/')
-            .then(response => response.ok ?
-                response.json() :
-                new Promise((resolve, reject) => reject(response.error()))
-            )
+        Helper.fetchHelper('http://127.0.0.1:8080/group', {
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify({
+                credentials: this.props.credentials
+            })
+        })
             .then(json => this.setState({
                     loaded: true,
                     groups: json
@@ -55,9 +59,9 @@ class GroupList extends React.Component {
             return (
                 <div className="group-list">
                     {this.state.groups.map((group) =>
-                        <GroupEntry key={group.id} onGroupDeleted={this.onGroupDeleted} group={group}/>)}
-                    <GroupCreate onGroupCreated={this.onGroupCreated}/>
-                    <GroupJoin onGroupJoined={this.onGroupJoined} />
+                        <GroupEntry key={group.id} onGroupDeleted={this.onGroupDeleted} selectGroup={this.props.selectGroup} group={group} credentials={this.props.credentials}/>)}
+                    <GroupCreate onGroupCreated={this.onGroupCreated} credentials={this.props.credentials} />
+                    <GroupJoin onGroupJoined={this.onGroupJoined} credentials={this.props.credentials} />
                 </div>
             );
         } else {

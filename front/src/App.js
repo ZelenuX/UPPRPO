@@ -1,34 +1,73 @@
-import MachineList from "./MachineList";
-import Test from "./Test";
+import React from 'react';
+import UserMenu from "./UserMenu";
+import MachinePage from "./MachinePage";
+import GroupMachines from "./GroupMachines";
+import GroupList from "./GroupList";
 
-let machines = [
-  {
-    id: 1,
-    name: "M1",
-    cpuLoad: 75,
-    cpuTemp: 80,
-    memLoad: 34
-  },
-  {
-    id: 2,
-    name: "M2",
-    cpuLoad: 50,
-    cpuTemp: 55,
-    memLoad: 90
-  },
-  {
-    id: 3,
-    name: "M3",
-    cpuLoad: 10,
-    cpuTemp: 10,
-    memLoad: 10
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      credentials: null,
+      groupId: null,
+      machineId: null
+    }
   }
-];
 
-function App() {
-  return (
-    <Test />
-  );
+  onLogin = (credentials) => {
+    this.setState({
+      credentials: credentials
+    });
+  }
+
+  onLogout = () => {
+    this.setState({
+      credentials: null
+    });
+  }
+
+  selectGroup = (groupId) => {
+    this.setState({
+      groupId: groupId
+    });
+  }
+
+  closeGroup = () => {
+    this.setState({
+      groupId: null
+    });
+  }
+
+  selectMachine = (machineId) => {
+    this.setState({
+      machineId: machineId
+    });
+  }
+
+  closeMachine = () => {
+    this.setState({
+      machineId: null
+    });
+  }
+
+  render() {
+    return (
+        <div className="app">
+          <UserMenu credentials={this.state.credentials} onLogin={this.onLogin} onLogout={this.onLogout}/>
+          {this.state.credentials === null ?
+              (<h1>Log in to start</h1>) :
+              (this.state.machineId !== null ?
+                  (<MachinePage id={this.state.machineId} groupId={this.state.groupId}
+                                credentials={this.state.credentials}
+                                closeMachine={this.closeMachine}/>) :
+                  (this.state.groupId !== null ?
+                      (<GroupMachines id={this.state.groupId} credentials={this.state.credentials}
+                                      closeGroup={this.closeGroup} selectMachine={this.selectMachine}/>) :
+                      (<GroupList credentials={this.state.credentials} selectGroup={this.selectGroup}/>)))}
+        </div>
+    );
+  }
 }
 
 export default App;

@@ -1,12 +1,13 @@
 import React from "react";
+import Helper from "./Helper";
 
 class GroupEntry extends React.Component {
     constructor(props) {
         super(props);
 
-        this.setState({
+        this.state = {
             sentDelete: false
-        });
+        };
     }
 
     onDeleteButtonClick = () => {
@@ -15,15 +16,27 @@ class GroupEntry extends React.Component {
         });
     }
 
+    onGroupReferenceClick = (event) => {
+        event.preventDefault();
+        this.props.selectGroup(this.props.group.id);
+    }
+
     componentDidUpdate(prevProps, prevState, snapshot) {
         if(this.state.sentDelete && !prevState.sentDelete) {
-            fetch('http://127.0.0.1:8080/api/group/' + this.props.group.id, {method: 'DELETE'})
-                .then(response => new Promise(
-                    (resolve, reject) => response.ok ?
-                        resolve(this.props.onGroupDeleted(this.props.group.id)) :
-                        reject(response.error())))
-                .catch(reason => {
-                    alert(reason);
+            Helper.fetchHelper('http://127.0.0.1:8080/group/exit', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: JSON.stringify({
+                    credentials: this.props.credentials,
+                    id: this.props.group.id,
+                    name: this.props.group.name
+                })
+            })
+                .then(() => this.props.onGroupDeleted(this.props.group.id),
+                    error => {
+                    alert("Error: "+error);
                     this.setState({
                         sentDelete: false
                     });
@@ -37,9 +50,9 @@ class GroupEntry extends React.Component {
                 <label>Loading...</label>
             </div>) :
             (<div className="group-entry">
-                <label>
+                <a href="" onClick={this.onGroupReferenceClick}>
                     {this.props.group.name}
-                </label>
+                </a>
                 <button onClick={this.onDeleteButtonClick}>Delete</button>
             </div>);
     }
