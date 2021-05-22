@@ -59,7 +59,7 @@ public class StateScanner {
                 if(fans!=null && fans.size()!=0){
                     cpuDataBuilder.append(", \"cpu_fan\" : [");
                     fans.forEach(fan -> {
-                        cpuDataBuilder.append("\"" + String.valueOf(fan.value)+"\",");
+                        cpuDataBuilder.append("" + String.valueOf(fan.value)+",");
                     });
                     if(fans.size()!=0){
                         cpuDataBuilder.deleteCharAt(cpuDataBuilder.length()-1);
@@ -109,7 +109,7 @@ public class StateScanner {
                   if(fans!=null && fans.size()!=0){
                       diskDataBuilder.append(", \"disk_fan\" : [");
                       fans.forEach(fan -> {
-                          diskDataBuilder.append("\"" + String.valueOf(fan.value)+"\",");
+                          diskDataBuilder.append("" + String.valueOf(fan.value)+",");
                       });
                       if(fans.size()!=0){
                           diskDataBuilder.deleteCharAt(diskDataBuilder.length()-1);
@@ -159,7 +159,7 @@ public class StateScanner {
                 if(fans!=null && fans.size()!=0){
                     gpuDataBuilder.append(", \"gpu_fan\" : [");
                     fans.forEach(fan -> {
-                        gpuDataBuilder.append("\"" + String.valueOf(fan.value)+"\",");
+                        gpuDataBuilder.append("" + String.valueOf(fan.value)+",");
                     });
                     if(fans.size()!=0){
                         gpuDataBuilder.deleteCharAt(gpuDataBuilder.length()-1);
@@ -169,7 +169,7 @@ public class StateScanner {
             }
             gpuDataBuilder.append("},");
         });
-        if(cpus.size()!=0){
+        if(gpus.size()!=0){
             gpuDataBuilder.deleteCharAt(gpuDataBuilder.length()-1);
         }
         gpuDataBuilder.append("]");
@@ -209,7 +209,7 @@ public class StateScanner {
                 if(fans!=null && fans.size()!=0){
                     moboDataBuilder.append(", \"mobo_fan\" : [");
                     fans.forEach(fan -> {
-                        moboDataBuilder.append("\"" + String.valueOf(fan.value)+"\",");
+                        moboDataBuilder.append("" + String.valueOf(fan.value)+",");
                     });
                     if(fans.size()!=0){
                         moboDataBuilder.deleteCharAt(moboDataBuilder.length()-1);
@@ -219,7 +219,7 @@ public class StateScanner {
             }
             moboDataBuilder.append("},");
         });
-        if(cpus.size()!=0){
+        if(mobos.size()!=0){
             moboDataBuilder.deleteCharAt(moboDataBuilder.length()-1);
         }
         moboDataBuilder.append("]");
