@@ -5,12 +5,12 @@ class GroupJoin extends React.Component {
     constructor(props) {
         super(props);
 
-        this.setState({
+        this.state = {
             activated: false,
             postSent: false,
             groupName: "",
             groupPassword: ""
-        });
+        };
     }
 
     onOuterJoinButtonClick = () => {
@@ -49,6 +49,7 @@ class GroupJoin extends React.Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         if(this.state.postSent && !prevState.postSent) {
             Helper.fetchHelper('http://127.0.0.1:8080/group/join', {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8'
                 },

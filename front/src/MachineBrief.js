@@ -22,7 +22,7 @@ class MachineBrief extends React.Component {
             sentDelete: true
         });
 
-        Helper.fetchHelper('http://127.0.0.1:8080/group/id/'+this.props.groupId+'/remove', {
+        Helper.fetchText('http://127.0.0.1:8080/group/id/'+this.props.groupId+'/remove', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
@@ -32,7 +32,7 @@ class MachineBrief extends React.Component {
                 observed_id: this.props.machine.id
             })
         })
-            .then(() => this.props.onDelete(this.props.machine.id),
+            .then(text => this.props.onDelete(this.props.machine.id),
                 error => {
                     alert("Error: "+error);
                     this.setState({

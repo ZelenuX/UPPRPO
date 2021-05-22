@@ -18,13 +18,13 @@ class GroupEntry extends React.Component {
 
     onGroupReferenceClick = (event) => {
         event.preventDefault();
-        this.props.selectGroup(this.props.group.id);
+        this.props.selectGroup(this.props.group);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if(this.state.sentDelete && !prevState.sentDelete) {
-            Helper.fetchHelper('http://127.0.0.1:8080/group/exit', {
-                method: 'DELETE',
+            Helper.fetchText('http://127.0.0.1:8080/group/exit', {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8'
                 },

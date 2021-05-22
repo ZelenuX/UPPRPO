@@ -1,15 +1,16 @@
 import React from "react";
+import Helper from "./Helper";
 
 class MachineAdd extends React.Component {
     constructor(props) {
         super(props);
 
-        this.setState({
+        this.state = {
             activated: false,
             postSent: false,
             machineName: "",
             machinePassword: ""
-        });
+        };
     }
 
     onOuterAddButtonClick = () => {
@@ -47,22 +48,19 @@ class MachineAdd extends React.Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if(this.state.postSent && !prevState.postSent) {
-            fetch('http://127.0.0.1:8080/api/addMachine/', {
+            Helper.fetchHelper('http://127.0.0.1:8080/group/id/'+this.props.groupId+'/add', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8'
                 },
                 body: JSON.stringify({
-                    name: prevState.machineName,
-                    password: prevState.machinePassword
+                    credentials: this.props.credentials,
+                    observed_name: prevState.machineName,
+                    observed_password: prevState.machinePassword
                 })
             })
-                .then(response => response.ok ?
-                    response.json() :
-                    new Promise((resolve, reject) => reject(response.error()))
-                )
                 .then(json => {
-                        this.props.onMachineAdded(json);
+                        this.props.onMachineAdded(json.machine);
                         this.setState({
                             activated: false,
                             postSent: false,

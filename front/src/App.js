@@ -10,7 +10,7 @@ class App extends React.Component {
 
     this.state = {
       credentials: null,
-      groupId: null,
+      group: null,
       machineId: null
     }
   }
@@ -27,15 +27,15 @@ class App extends React.Component {
     });
   }
 
-  selectGroup = (groupId) => {
+  selectGroup = (group) => {
     this.setState({
-      groupId: groupId
+      group: group
     });
   }
 
   closeGroup = () => {
     this.setState({
-      groupId: null
+      group: null
     });
   }
 
@@ -58,11 +58,11 @@ class App extends React.Component {
           {this.state.credentials === null ?
               (<h1>Log in to start</h1>) :
               (this.state.machineId !== null ?
-                  (<MachinePage id={this.state.machineId} groupId={this.state.groupId}
+                  (<MachinePage id={this.state.machineId} groupId={this.state.group.id}
                                 credentials={this.state.credentials}
                                 closeMachine={this.closeMachine}/>) :
-                  (this.state.groupId !== null ?
-                      (<GroupMachines id={this.state.groupId} credentials={this.state.credentials}
+                  (this.state.group !== null ?
+                      (<GroupMachines group={this.state.group} credentials={this.state.credentials}
                                       closeGroup={this.closeGroup} selectMachine={this.selectMachine}/>) :
                       (<GroupList credentials={this.state.credentials} selectGroup={this.selectGroup}/>)))}
         </div>

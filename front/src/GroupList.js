@@ -16,6 +16,7 @@ class GroupList extends React.Component {
 
     componentDidMount() {
         Helper.fetchHelper('http://127.0.0.1:8080/group', {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
             },
@@ -25,7 +26,7 @@ class GroupList extends React.Component {
         })
             .then(json => this.setState({
                     loaded: true,
-                    groups: json
+                    groups: json.groups
                 }),
                 error => alert("Error " + error));
     }

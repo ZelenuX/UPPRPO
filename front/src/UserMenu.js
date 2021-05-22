@@ -52,7 +52,8 @@ class UserMenu extends React.Component {
             submitSent: true
         });
 
-        Helper.fetchHelper("http://127.0.0.1:8080/user/login", {
+        Helper.fetchText("http://127.0.0.1:8080/user/login", {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
             },
@@ -61,10 +62,10 @@ class UserMenu extends React.Component {
                 password: this.state.password
             })
         })
-            .then(json => {
+            .then(text => {
                 this.props.onLogin({
-                    username: this.state.username,
-                    password: this.state.password
+                    username: this.state.usernameFieldValue,
+                    password: this.state.passwordFieldValue
                 });
                 this.setState({
                     signInActivated: false,
@@ -87,20 +88,20 @@ class UserMenu extends React.Component {
             submitSent: true
         });
 
-        Helper.fetchHelper("http://127.0.0.1:8080/user/register", {
+        Helper.fetchText("http://127.0.0.1:8080/user/register", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
             },
             body: JSON.stringify({
-                username: this.state.username,
-                password: this.state.password
+                username: this.state.usernameFieldValue,
+                password: this.state.passwordFieldValue
             })
         })
-            .then(json => {
+            .then(text => {
                     this.props.onLogin({
-                        username: this.state.username,
-                        password: this.state.password
+                        username: this.state.usernameFieldValue,
+                        password: this.state.passwordFieldValue
                     });
                     this.setState({
                         signInActivated: false,

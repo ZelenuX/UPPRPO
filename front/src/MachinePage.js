@@ -16,6 +16,7 @@ class MachinePage extends React.Component {
 
     componentDidMount() {
         Helper.fetchHelper('http://127.0.0.1:8080/observed/id/'+this.props.id, {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
             },

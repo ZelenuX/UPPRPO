@@ -15,6 +15,7 @@ class GroupMachines extends React.Component {
 
     componentDidMount() {
         Helper.fetchHelper('http://127.0.0.1:8080/group/id/'+this.props.group.id, {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
             },
@@ -55,7 +56,7 @@ class GroupMachines extends React.Component {
             <div className="machine-list">
                 {this.state.machines.map((machine) =>
                     <MachineBrief key={machine.id} groupId={this.props.group.id} onDelete={this.onDelete} selectMachine={this.props.selectMachine} machine={machine} />)}
-                    <MachineAdd onMachineAdded={this.onAdd} credentials={this.props.credentials} />
+                    <MachineAdd onMachineAdded={this.onAdd} groupId={this.props.group.id} credentials={this.props.credentials} />
                     <button onClick={this.onCloseButtonClick}>Close</button>
             </div>
         );

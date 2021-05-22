@@ -5,12 +5,12 @@ class GroupCreate extends React.Component {
     constructor(props) {
         super(props);
 
-        this.setState({
+        this.state = {
             activated: false,
             postSent: false,
             groupName: "",
             groupPassword: ""
-        });
+        };
     }
 
     onCreateButtonClick = () => {
@@ -48,7 +48,7 @@ class GroupCreate extends React.Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if(this.state.postSent && !prevState.postSent) {
-           Helper.fetchHelper('http://127.0.0.1:8080/group/', {
+           Helper.fetchHelper('http://127.0.0.1:8080/group/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8'
