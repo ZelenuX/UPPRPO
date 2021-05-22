@@ -101,7 +101,7 @@ public class ViewerAcceptorGroups {
         }
     }
 
-    @PostMapping("/id/{id}/add")//todo post -> get
+    @PostMapping("/id/{id}/add")
     public String addDeviceToGroup(@PathVariable(value="id") Long groupId, @RequestBody Map<String, Object> model)
             throws WrongFormatException, GroupException, DeviceException, UserException {
         try {
@@ -119,7 +119,7 @@ public class ViewerAcceptorGroups {
         }
     }
 
-    @PostMapping("/id/{id}/remove")//todo post -> get
+    @PostMapping("/id/{id}/remove")
     public String removeDeviceFromGroup(@PathVariable(value="id") Long groupId, @RequestBody Map<String, Object> model)
             throws WrongFormatException, GroupException, DeviceException, UserException {
         try {

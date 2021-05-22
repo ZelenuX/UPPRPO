@@ -2,6 +2,7 @@ package com.zelenux.upprpo_server_test.viewer;
 
 import com.zelenux.upprpo_server_test.viewer.exceptions.ServerLogicException;
 import com.zelenux.upprpo_server_test.viewer.exceptions.WrongFormatException;
+import com.zelenux.upprpo_server_test.viewer.exceptions.deviceExceptions.DeviceDoesNotExistException;
 import com.zelenux.upprpo_server_test.viewer.exceptions.groupExceptions.*;
 import com.zelenux.upprpo_server_test.viewer.exceptions.userExceptions.UserAlreadyExistsException;
 import com.zelenux.upprpo_server_test.viewer.exceptions.userExceptions.UserDoesNotExistException;
@@ -46,6 +47,12 @@ public class ViewerResponder {
     @ExceptionHandler(UserDoesNotExistException.class)
     public String userDoesNotExist(){
         return "user_does_not_exist";
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(DeviceDoesNotExistException.class)
+    public String deviceDoesNotExist(){
+        return "device_does_not_exist";
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)

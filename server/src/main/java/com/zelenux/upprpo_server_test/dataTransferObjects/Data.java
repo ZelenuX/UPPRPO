@@ -4,6 +4,8 @@ import com.zelenux.upprpo_server_test.entities.DataEntity;
 import com.zelenux.upprpo_server_test.utils.JSONAdder;
 import lombok.Getter;
 
+import java.util.Date;
+
 @Getter
 public class Data implements JSONAdder {
     private Long id;
@@ -12,6 +14,7 @@ public class Data implements JSONAdder {
     private Integer processorTemperature;
     private Integer processorLoad;
     private Integer ramLoad;
+    private Date time;
 
     public Data(String deviceName, String devicePassword, Integer processorTemperature, Integer processorLoad, Integer ramLoad) {
         this.deviceName = deviceName;
@@ -35,6 +38,16 @@ public class Data implements JSONAdder {
         processorTemperature = dataEntity.getProcessorTemperature();
         processorLoad = dataEntity.getProcessorLoad();
         ramLoad = dataEntity.getRamLoad();
+        time = dataEntity.getTime();
+    }
+    public Data(Data another){
+        id = another.id;
+        deviceName = another.deviceName;
+        devicePassword = another.devicePassword;
+        processorTemperature = another.processorTemperature;
+        processorLoad = another.processorLoad;
+        ramLoad = another.ramLoad;
+        time = another.getTime();
     }
 
     @Override

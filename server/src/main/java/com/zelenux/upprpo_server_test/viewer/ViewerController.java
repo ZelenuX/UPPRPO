@@ -1,9 +1,6 @@
 package com.zelenux.upprpo_server_test.viewer;
 
-import com.zelenux.upprpo_server_test.dataTransferObjects.Device;
-import com.zelenux.upprpo_server_test.dataTransferObjects.DeviceSingleData;
-import com.zelenux.upprpo_server_test.dataTransferObjects.Group;
-import com.zelenux.upprpo_server_test.dataTransferObjects.User;
+import com.zelenux.upprpo_server_test.dataTransferObjects.*;
 import com.zelenux.upprpo_server_test.utils.JSONBuilder;
 import com.zelenux.upprpo_server_test.viewer.exceptions.ServerLogicException;
 import com.zelenux.upprpo_server_test.viewer.exceptions.WrongFormatException;
@@ -108,6 +105,18 @@ public class ViewerController {
         });
         return jsonBuilder.startJSON().add("name", group.getName())
                 .addArray("observed", devicesLastData.toArray(new DeviceSingleData[0])).finishJSON();
+    }
+    @Transactional
+    public String getDetailedDeviceInfo(User user, Group group, Device device)
+            throws WrongFormatException, GroupException, DeviceException, UserException {
+        if (user.getName() == null || user.getPassword() == null
+                ||group.getId() == null || device.getId() == null){
+            formatError();
+        }
+        List<Data> detailedData = dao.getDeviceDetailedData(device, group, user);
+        Device deviceWithName = dao.getDeviceById(device.getId());
+        return jsonBuilder.startJSON().add("name", deviceWithName.getName())
+                .addArray("data", detailedData.toArray(new Data[0])).finishJSON();
     }
 
     public String formatError() throws WrongFormatException {

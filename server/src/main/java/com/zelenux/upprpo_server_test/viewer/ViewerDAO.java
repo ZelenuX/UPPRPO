@@ -105,6 +105,9 @@ public class ViewerDAO {
         }
         return new Group(groupOptional.get());
     }
+    public Device getDeviceById(Long id) throws DeviceDoesNotExistException {
+        return new Device(devicesRepository.findById(id).orElseThrow(DeviceDoesNotExistException::new));
+    }
 
     @Transactional
     public Group addUserToGroup(User user, Group group) throws UserException, GroupException {
@@ -182,8 +185,7 @@ public class ViewerDAO {
         List<DataEntity> dataEntities = dataRepository.findAllByDeviceId(deviceEntity.getId());
         List<Data> dataList = new ArrayList<>();
         for (DataEntity dataEntity : dataEntities){
-            dataList.add(new Data(dataEntity.getId(), device.getName(), device.getPassword(),
-                    dataEntity.getProcessorTemperature(), dataEntity.getProcessorLoad(), dataEntity.getRamLoad()));
+            dataList.add(new Data(dataEntity));
         }
         return dataList;
     }
@@ -235,5 +237,24 @@ public class ViewerDAO {
             throw new GroupDoesNotContainDeviceException();
         }
         devicesGroupsRepository.delete(deviceGroupEntity);
+    }
+
+    @Transactional
+    public List<Data> getDeviceDetailedData(Device device, Group group, User user) throws DeviceException, GroupException, UserException {
+        DeviceEntity deviceEntity = devicesRepository.findById(device.getId()).orElseThrow(DeviceDoesNotExistException::new);
+        UserEntity userEntity = getUserIfPasswordCorrect(user);
+        GroupEntity groupEntity = groupsRepository.findById(group.getId()).orElseThrow(GroupDoesNotExistException::new);
+        if (usersGroupsRepository.findByUserAndGroup(userEntity.getId(), groupEntity.getId()) == null){
+            throw new GroupDoesNotContainUserException();
+        }
+        DeviceGroupEntity deviceGroupEntity = devicesGroupsRepository.findByDeviceAndGroup(deviceEntity.getId(), groupEntity.getId());
+        if (deviceGroupEntity == null){
+            throw new GroupDoesNotContainDeviceException();
+        }
+        List<Data> data = getAllDeviceData(device);
+        for (int i = 0; i < data.size(); i++) {
+            data.set(i, new DataJSONDetailedAdder(data.get(i)));
+        }
+        return data;
     }
 }
