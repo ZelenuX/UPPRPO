@@ -42,25 +42,26 @@ public class Data implements JSONAdder {
         if (withBrackets){
             stringBuilder.append("{");
         }
-        boolean firstAdded = false;
+        stringBuilder.append("\"cpu_t\":");
         if (processorTemperature != null){
-            stringBuilder.append("\"cpu_t\":").append(processorTemperature);
-            firstAdded = true;
+            stringBuilder.append(processorTemperature);
         }
+        else {
+            stringBuilder.append(0);//todo change
+        }
+        stringBuilder.append(",\"cpu_load\":");
         if (processorLoad != null){
-            if (firstAdded) {
-                stringBuilder.append(",");
-            }
-            else {
-                firstAdded = true;
-            }
-            stringBuilder.append("\"cpu_load\":").append(processorLoad);
+            stringBuilder.append(processorLoad);
         }
+        else {
+            stringBuilder.append(0);//todo change
+        }
+        stringBuilder.append(",\"ram_load\":");
         if (ramLoad != null){
-            if (firstAdded) {
-                stringBuilder.append(",");
-            }
-            stringBuilder.append("\"ram_load\":").append(ramLoad);
+            stringBuilder.append(ramLoad);
+        }
+        else {
+            stringBuilder.append(0);//todo change
         }
         if (withBrackets){
             stringBuilder.append("}");

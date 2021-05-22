@@ -1,7 +1,6 @@
 package com.zelenux.upprpo_server_test.repositories;
 
 import com.zelenux.upprpo_server_test.entities.GroupEntity;
-import com.zelenux.upprpo_server_test.entities.UserEntity;
 import com.zelenux.upprpo_server_test.entities.UserGroupEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

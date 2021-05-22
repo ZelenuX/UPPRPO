@@ -23,6 +23,12 @@ public class ViewerResponder {
     public String userExitedFromGroup(){
         return "exited_from_group";
     }
+    public String deviceAddedToGroup(){
+        return "device_added";
+    }
+    public String deviceRemovedFromGroup(){
+        return "device_removed";
+    }
 
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(UserAlreadyExistsException.class)
@@ -67,9 +73,21 @@ public class ViewerResponder {
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(GroupAlreadyHasDeviceException.class)
+    public String groupAlreadyHasDevice(){
+        return "group_already_contains_device";
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(GroupDoesNotContainUserException.class)
     public String groupDoesNotContainUser(){
         return "group_does_not_contain_user";
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(GroupDoesNotContainDeviceException.class)
+    public String groupDoesNotContainDevice(){
+        return "group_does_not_contain_device";
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

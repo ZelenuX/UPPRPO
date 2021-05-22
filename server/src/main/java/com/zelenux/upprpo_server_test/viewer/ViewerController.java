@@ -1,7 +1,7 @@
 package com.zelenux.upprpo_server_test.viewer;
 
 import com.zelenux.upprpo_server_test.dataTransferObjects.Device;
-import com.zelenux.upprpo_server_test.dataTransferObjects.DeviceLastData;
+import com.zelenux.upprpo_server_test.dataTransferObjects.DeviceSingleData;
 import com.zelenux.upprpo_server_test.dataTransferObjects.Group;
 import com.zelenux.upprpo_server_test.dataTransferObjects.User;
 import com.zelenux.upprpo_server_test.utils.JSONBuilder;
@@ -65,6 +65,23 @@ public class ViewerController {
         dao.removeUserFromGroup(user, group);
         return responder.userExitedFromGroup();
     }
+    public String addDeviceToGroup(Device device, Group group, User user)
+            throws WrongFormatException, GroupException, DeviceException, UserException {
+        if (device.getName() == null || device.getPassword() == null
+                || group.getId() == null || user.getName() == null || user.getPassword() == null){
+            formatError();
+        }
+        DeviceSingleData deviceSingleData = dao.addDeviceToGroup(device, group, user);
+        return jsonBuilder.startJSON().add("machine", deviceSingleData).finishJSON();
+    }
+    public String removeDeviceFromGroup(Device device, Group group, User user)
+            throws WrongFormatException, GroupException, DeviceException, UserException {
+        if (device.getId() == null || group.getId() == null || user.getName() == null || user.getPassword() == null){
+            formatError();
+        }
+        dao.removeDeviceFromGroup(device, group, user);
+        return responder.deviceRemovedFromGroup();
+    }
 
     public String getGroupsWithUser(User user) throws WrongFormatException, UserException {
         if (user.getName() == null || user.getPassword() == null){
@@ -81,16 +98,16 @@ public class ViewerController {
         dao.checkUsernameAndPassword(user);
         group = dao.getGroupById(group.getId());
         List<Device> devices = dao.getGroupDevices(group);
-        List<DeviceLastData> devicesLastData = new ArrayList<>();
+        List<DeviceSingleData> devicesLastData = new ArrayList<>();
         devices.forEach(device -> {
             try {
-                devicesLastData.add(new DeviceLastData(device, dao.getLastDeviceData(device)));
+                devicesLastData.add(new DeviceSingleData(device, dao.getLastDeviceData(device)));
             } catch (DeviceException e) {
                 throw new ServerLogicException();
             }
         });
         return jsonBuilder.startJSON().add("name", group.getName())
-                .addArray("observed", devicesLastData.toArray(new DeviceLastData[0])).finishJSON();
+                .addArray("observed", devicesLastData.toArray(new DeviceSingleData[0])).finishJSON();
     }
 
     public String formatError() throws WrongFormatException {
